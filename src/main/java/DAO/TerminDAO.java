@@ -13,6 +13,10 @@ public class TerminDAO {
     //TerminBox terminBox = new TerminBox();
     Termin termin;
 
+    public TerminDAO(){
+        termin = new Termin();
+    }
+
     private ConnectionHelper connection = new ConnectionHelper();
 
     public ArrayList<Termin> findAll() {
