@@ -9,7 +9,11 @@ import java.util.List;
 
 public class NutzerDAO {
 
-    Nutzer nutzer;
+    private Nutzer nutzer;
+
+    public NutzerDAO (){
+        nutzer = new Nutzer();
+    }
 
     public List<Nutzer> findAll() {
         List<Nutzer> list = new ArrayList<Nutzer>();
