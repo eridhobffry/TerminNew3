@@ -20,7 +20,7 @@ public class TestNutzerDAO {
         nutzerDAO = new NutzerDAO();
     }
 
-    /*@Test
+    @Test
     public void insertIntoEmptyDB() {
 
         removeAlleNutzer();
@@ -32,15 +32,15 @@ public class TestNutzerDAO {
                 list.size(), 1);
         assertEquals("Fehler: Der erste Eintrag in der Datenbank ist nicht gleich mit den eingefügten Nutzer ",
                list.get(0), insertedNutzer);
-    }*/
+    }
 
-   /* @Test
+    @Test
     public void updateSingleNutzer() {
         removeAlleNutzer();
         String vorname = "max";
         String nachname = "muster";
         Nutzer nutzer = new Nutzer("Max", "Musterman");
-        Boolean insertedNutzer = nutzerDAO.create(vorname, nachname);
+        Nutzer insertedNutzer = nutzerDAO.create(nutzer);
         nutzer.setNachname("NewMax");
         nutzerDAO.update(insertedNutzer);
 
@@ -49,7 +49,7 @@ public class TestNutzerDAO {
                 list.size(), 1);
         assertEquals("Fehler: Der erste Eintrag in der Datenbank ist nicht gleich mit dem geaenderten Nutzer",
                 list.get(0), insertedNutzer);
-    }*/
+    }
 
     @Test
     public void findByID() {
@@ -57,7 +57,7 @@ public class TestNutzerDAO {
         String vorname = "max";
         String nachname = "muster";
         Nutzer nutzer = new Nutzer("Max", "Musterman");
-        Boolean insertedNutzer = nutzerDAO.create(vorname, nachname);
+        Nutzer insertedNutzer = nutzerDAO.create(nutzer);
 
         Nutzer nutzerById = nutzerDAO.findById(nutzer.getId());
         assertEquals("Fehler: Der mit der ID ausgesuchte Eintrag in der Datenbank ist nicht gleich mit dem eingefuegten Nutzer",

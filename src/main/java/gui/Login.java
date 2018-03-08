@@ -1,11 +1,16 @@
 package gui;
 
-import java.awt.*;
-
+import DAO.NutzerDAO;
+import Data.Nutzer;
+import client.NutzerHandle;
+import org.glassfish.grizzly.http.server.HttpServer;
+import webservices.KalenderServer;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
+import javax.ws.rs.client.WebTarget;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,14 +18,20 @@ public class Login {
 
 
     private JFrame frame;
-    //private JTextField textField;
-    //private JTextField txtUsername;
+
     private JButton btnRegistration;
     private JButton btnExit;
     private JLabel lblLoginSystems;
 
     static Color accent = new Color(0, 188, 212);
     static Color bg = new Color(96, 125, 139);
+
+    private HttpServer server;
+    private WebTarget target;
+
+    private NutzerDAO nutzerDAO;
+    private NutzerHandle nutzerHandle;
+
 
     /**
      * Launch the application.
@@ -54,7 +65,21 @@ public class Login {
      * Create the application.
      */
     public Login() {
+
+        setUp();
         initialize();
+    }
+
+
+    public void setUp() {
+        // start the server
+        server = KalenderServer.startServer();
+        // create the client
+        nutzerHandle = new NutzerHandle();
+    }
+
+    public void tearDown() {
+        server.stop();
     }
 
     /**
@@ -62,37 +87,23 @@ public class Login {
      */
     public void initialize() {
         frame = new JFrame();
-        frame.setBounds(600, 300, 450, 300);
+        frame.setBounds(800, 500, 800, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
-        JLabel lblUsername = new JLabel("Username : ");
-        lblUsername.setBounds(38, 74, 124, 30);
+        JLabel lblUsername = new JLabel("Waehlen Sie Ihre Nachname & Vorname: ");
+        lblUsername.setBounds(270, 105, 400, 80);
         frame.getContentPane().add(lblUsername);
 
-        final JComboBox<String> comboBox = new JComboBox<String>();
-        comboBox.addItem("Gyoergyipalatinus");
-        comboBox.addItem("Eridhobuffery");
-        comboBox.addItem("Enxhinina");
-        comboBox.addItem("Peterparker");
-        comboBox.addItem("Timoklein");
-        comboBox.addItem("Others");
+        Nutzer erstellterNutzer = nutzerHandle.create(new Nutzer("Peter", "Musterman"));
+        final JComboBox<Nutzer> comboBox = new JComboBox<>();
+        comboBox.addItem(erstellterNutzer);
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
             }
         });
-        comboBox.setBounds(150, 120, 140, 30);
+        comboBox.setBounds(220, 220, 340, 30);
         frame.getContentPane().add(comboBox);
-
-        /*JLabel lblUsername = new JLabel("Username");
-        lblUsername.setBounds(38, 74, 124, 30);
-        frame.getContentPane().add(lblUsername);
-
-
-        txtUsername = new JTextField();
-        txtUsername.setBounds(162, 79, 221, 30);
-        frame.getContentPane().add(txtUsername);
-        txtUsername.setColumns(10);*/
 
 
         JButton btnLogin = new JButton("Login");
@@ -110,7 +121,7 @@ public class Login {
                 }
             }
         });
-        btnLogin.setBounds(100, 199, 89, 30);
+        btnLogin.setBounds(250, 350, 89, 30);
         frame.getContentPane().add(btnLogin);
 
         btnRegistration = new JButton("Registration");
@@ -121,17 +132,16 @@ public class Login {
             }
         });
 
-        btnRegistration.setBounds(200, 199, 120, 30);
+        btnRegistration.setBounds(400, 350, 120, 30);
         frame.getContentPane().add(btnRegistration);
 
-
         JSeparator separator_1 = new JSeparator();
-        separator_1.setBounds(38, 53, 347, 10);
+        separator_1.setBounds(38, 73, 700, 10);
         frame.getContentPane().add(separator_1);
 
-        lblLoginSystems = new JLabel("Termincalendar");
+        lblLoginSystems = new JLabel("Wilkommen im Termin Kalendar");
         lblLoginSystems.setFont(new Font("Tahoma", Font.BOLD, 20));
-        lblLoginSystems.setBounds(139, 11, 250, 31);
+        lblLoginSystems.setBounds(230, 18, 700, 31);
         frame.getContentPane().add(lblLoginSystems);
     }
 }

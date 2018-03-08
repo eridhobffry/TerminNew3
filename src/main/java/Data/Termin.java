@@ -3,10 +3,12 @@ package Data;
 import DAO.EinladungDAO;
 import DAO.TeilnehmerDAO;
 import database.TimestampAdapter;
+import gui.TerminPanel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -15,28 +17,34 @@ import java.util.Objects;
 public class Termin {
 
         public int id;
-        public String name;
-        public Time von;
-        public Time bis;
+        public String title;
+        public Timestamp von;
+        public Timestamp bis;
         public String beschreibung;
         public String ort;
 
         private Date date;
 
-        //private TerminBox terminBox;
+        private TerminPanel terminPanel;
 
 
     public Termin() {}
 
-    public Termin(int id, String name, Time von, Time bis, String ort, String beschreibung, Date date) {
+    public Termin(int id, Timestamp von, Timestamp bis, String ort, String beschreibung) {
 
         this.id = id;
-        this.name = name;
         this.von = von;
         this.bis = bis;
         this.ort = ort;
         this.beschreibung = beschreibung;
-        this.date = date;
+    }
+
+    public Termin(Timestamp von, Timestamp bis, String ort, String beschreibung) {
+
+        this.von = von;
+        this.bis = bis;
+        this.ort = ort;
+        this.beschreibung = beschreibung;
     }
 
     @Override
@@ -47,9 +55,9 @@ public class Termin {
                 ", bis=" + bis +
                 ", beschreibung='" + beschreibung + '\'' +
                 ", ort='" + ort + '\'' +
-                ", date='" + date + '\'' +
                 '}';
     }
+
 
     /**
      * Methode um die eingeladenen Nutzer des Termins zurückzugeben
@@ -82,27 +90,31 @@ public class Termin {
         this.id = id;
     }
 
+    public String getTitle() {
+        /*String str = terminBox.getWhere();
+        return str;*/
+        return title;
+    }
+
+    public void setTitle(String ort) {
+        this.title = title;
+    }
+
     @XmlJavaTypeAdapter(TimestampAdapter.class)
-    public Time getVon() {
-        /*Date dateFrom = terminBox.getFrom();
-        Timestamp timestamp = new Timestamp(dateFrom.getTime());
-        return timestamp;*/
+    public Timestamp getVon() {
         return von;
     }
 
-    public void setVon(Time von) {
+    public void setVon(Timestamp von) {
         this.von = von;
     }
 
     @XmlJavaTypeAdapter(TimestampAdapter.class)
-    public Time getBis() {
-       /* Date dateUntil = terminBox.getUntil();
-        Timestamp timestamp = new Timestamp(dateUntil.getTime());
-        return timestamp;*/
-       return bis;
+    public Timestamp getBis() {
+        return bis;
     }
 
-    public void setBis(Time bis) {
+    public void setBis(Timestamp bis) {
         this.bis = bis;
     }
 

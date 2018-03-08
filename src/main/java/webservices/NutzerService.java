@@ -44,8 +44,8 @@ public class NutzerService {
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Boolean createNutzer(String vorname, String nachname) {
-        return nutzerDAO.create(vorname, nachname);
+    public Nutzer createNutzer(Nutzer nutzer) {
+        return nutzerDAO.create(nutzer);
     }
 
     /**

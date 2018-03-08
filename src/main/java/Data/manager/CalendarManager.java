@@ -31,8 +31,8 @@ import java.util.Date;
          *
          * @return Termin
          */
-        public Boolean addAppointment(String title, Time von, Time bis, String ort, String beschreibung, Date date) {
-            return appointment.create(title, von, bis, ort, beschreibung, date);
+        public Termin addAppointment(Termin termin) {
+            return appointment.create(termin);
         }
 
         /**

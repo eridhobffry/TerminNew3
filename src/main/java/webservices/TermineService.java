@@ -16,7 +16,7 @@ import java.util.List;
 public class TermineService {
 
     public int id;
-    public String name;
+    public String title;
     public Time von;
     public Time bis;
     public String beschreibung;
@@ -42,8 +42,8 @@ public class TermineService {
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Boolean create(String title, Time von, Time bis, String ort, String beschreibung, Date date) {
-        return terminDAO.create(title, von, bis, ort, beschreibung, date);
+    public Termin create(Termin termin) {
+        return terminDAO.create(termin);
     }
 
     /**

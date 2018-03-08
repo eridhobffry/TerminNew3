@@ -85,21 +85,35 @@ public class TerminDAO {
 
 
    //
-    public Boolean create(String title, Time von, Time bis, String ort, String beschreibung, Date date) {
-
+    public Termin create(Termin termin) {
 
         Connection c = null;
         PreparedStatement ps = null;
         try {
+            c = ConnectionHelper.getConnection();
+            ps = c.prepareStatement("INSERT INTO Termin (Beschreibung, Ort, Von, Bis) VALUES (?, ?, ?, ?)",
+                    new String[] { "ID" });
+            ps.setString(1, termin.getBeschreibung());
+            ps.setString(2, termin.getOrt());
+            ps.setTimestamp(3, termin.getVon());
+            ps.setTimestamp(4, termin.getBis());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            // Update the id in the returned object. This is important as this value must be returned to the client.
+            int id = rs.getInt(1);
+            termin.setId(id);
+        /*try {
             if (date != null && title != null && date != null && von != null && bis != null) {
                 c = ConnectionHelper.getConnection();
-                ps = c.prepareStatement("INSERT INTO Termin (Beschreibung, Ort, Von, Bis, Title) VALUES (?, ?, ?, ?, ?)",
+                ps = c.prepareStatement("INSERT INTO Termin (Title, Von, Bis, Ort, Beschreibung, Datum) VALUES (?, ?, ?, ?, ?, ?)",
                         new String[]{"ID"});
-                ps.setString(1, beschreibung);
-                ps.setString(2, ort);
-                ps.setTime(3, von);
-                ps.setTime(4, bis);
-                ps.setString(5, title);
+                ps.setString(1, title);
+                ps.setTime(2, von);
+                ps.setTime(3, bis);
+                ps.setString(4, ort);
+                ps.setString(5, beschreibung);
+                ps.setDate(6, (java.sql.Date) date);
                 ps.executeUpdate();
                 ResultSet rs = ps.getGeneratedKeys();
                 rs.next();
@@ -108,14 +122,14 @@ public class TerminDAO {
                 termin.setId(id);
                 }
             int count = ps.executeUpdate();
-            return count == 1;
+            return count == 1;*/
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             ConnectionHelper.close(c);
         }
-
+        return termin;
     }
 
     /*public Termin save(Termin termin) {
@@ -132,8 +146,8 @@ public class TerminDAO {
                     ("UPDATE Termin SET Beschreibung =?, Ort =?, Von =?, Bis =? WHERE id =?");
             ps.setString(1, termin.getBeschreibung());
             ps.setString(2, termin.getOrt());
-            ps.setTime(3, termin.getVon());
-            ps.setTime(4, termin.getBis());
+            ps.setTimestamp(3, termin.getVon());
+            ps.setTimestamp(4, termin.getBis());
             ps.setInt(5, termin.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -169,8 +183,8 @@ public class TerminDAO {
         termin.setId(rs.getInt("ID"));
         termin.setBeschreibung(rs.getString("Beschreibung"));
         termin.setOrt(rs.getString("Ort"));
-        termin.setVon(rs.getTime("Von"));
-        termin.setBis(rs.getTime("Bis"));
+        termin.setVon(rs.getTimestamp("Von"));
+        termin.setBis(rs.getTimestamp("Bis"));
 
 
         return termin;

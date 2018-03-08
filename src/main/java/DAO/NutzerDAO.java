@@ -83,15 +83,15 @@ public class NutzerDAO {
     }
 
 
-    public Boolean create(String vorname, String nachname) {
+    public Nutzer create(Nutzer nutzer) {
         Connection c = null;
         PreparedStatement ps = null;
         try {
             c = ConnectionHelper.getConnection();
             ps = c.prepareStatement("INSERT INTO Nutzer(Vorname, Nachname) VALUES (?, ?)",
                     new String[] { "ID" });
-            ps.setString(1, vorname);
-            ps.setString(2, nachname);
+            ps.setString(1, nutzer.getVorname());
+            ps.setString(2, nutzer.getNachname());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
@@ -99,15 +99,15 @@ public class NutzerDAO {
             int id = rs.getInt(1);
             nutzer.setId(id);
 
-            int count = ps.executeUpdate();
-            return count == 1;
+            //int count = ps.executeUpdate();
+            //return count == 1;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             ConnectionHelper.close(c);
         }
-        //return nutzer;
+        return nutzer;
     }
 
    /* public Nutzer save(Nutzer nutzer) {

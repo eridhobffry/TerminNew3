@@ -14,7 +14,7 @@ public class NutzerManager {
         return nutzerDAO.findAll();
     }
 
-    public Boolean addNutzer (String vorname, String nachname){
-        return nutzerDAO.create(vorname, nachname);
+    public Nutzer addNutzer (Nutzer nutzer){
+        return nutzerDAO.create(nutzer);
     }
 }

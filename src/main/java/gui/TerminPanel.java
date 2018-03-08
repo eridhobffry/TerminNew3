@@ -6,13 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import DAO.TeilnehmerDAO;
 import Data.Termin;
 import Data.manager.CalendarManager;
+import client.NutzerHandle;
+import client.TerminHandle;
 import org.glassfish.grizzly.http.util.TimeStamp;
 
 /**
@@ -29,8 +33,9 @@ public class TerminPanel extends JPanel {
     private JTextField nameTextField, locationTextField, notesTextField, startTimeTextField, endTimeTextField;
     private Time formattedStartTime, formattedEndTime;
     private CalendarManager manager = new CalendarManager();
+    private NutzerHandle nutzerHandle;
 
-    public String name;
+    public String title;
     public Time von;
     public Time bis;
     public String beschreibung;
@@ -173,6 +178,8 @@ public class TerminPanel extends JPanel {
          * @param e
          */
         public void actionPerformed(ActionEvent e) {
+            TerminHandle terminHandle = null;
+            Termin termin = terminHandle.create(new Termin());
             Boolean validName = true;
             Boolean validTimes = true;
 
@@ -203,12 +210,9 @@ public class TerminPanel extends JPanel {
             }
 
 
-             //Termin termin = new Termin (this.name, date, this.beschreibung,ort, formattedStartTime, formattedEndTime);
-
-
             if (validName && validTimes) {
                 // add appointment
-                manager.addAppointment(name, formattedStartTime, formattedEndTime, ort, beschreibung, date);
+                manager.addAppointment(termin);
                 // close frame
                 appointmentFrame.setVisible(false);
                 appointmentFrame.dispose();
