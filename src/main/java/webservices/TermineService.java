@@ -9,6 +9,7 @@ import Data.Termin;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -16,13 +17,12 @@ import java.util.List;
 public class TermineService {
 
     public int id;
-    public String title;
-    public Time von;
-    public Time bis;
+    public Timestamp von;
+    public Timestamp bis;
     public String beschreibung;
     public String ort;
 
-    private Date date;
+    //private Date date;
 
     static final String webContextPath = "/termine";
 

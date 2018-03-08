@@ -1,23 +1,18 @@
 package gui;
 
+import Data.Termin;
+import Data.manager.CalendarManager;
+import webservices.TermineService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import DAO.TeilnehmerDAO;
-import Data.Termin;
-import Data.manager.CalendarManager;
-import client.NutzerHandle;
-import client.TerminHandle;
-import org.glassfish.grizzly.http.util.TimeStamp;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * The <code>AppointmentPanel</code> ensures the panel of the <code>AppointmentFrame</code>.
@@ -30,14 +25,13 @@ public class TerminPanel extends JPanel {
     private Date date;
     private JFrame appointmentFrame;
     private CalendarPanel calendarPanel;
-    private JTextField nameTextField, locationTextField, notesTextField, startTimeTextField, endTimeTextField;
-    private Time formattedStartTime, formattedEndTime;
+    private JTextField beschreibungTextField, ortTextField, vonTextField, bisTextField;
+    private Timestamp formattedStartTime, formattedEndTime;
     private CalendarManager manager = new CalendarManager();
-    private NutzerHandle nutzerHandle;
 
-    public String title;
-    public Time von;
-    public Time bis;
+
+    public Timestamp von;
+    public Timestamp bis;
     public String beschreibung;
     public String ort;
 
@@ -63,7 +57,7 @@ public class TerminPanel extends JPanel {
      */
     public void drawAppointmentPanel() {
         setLayout(new SpringLayout());
-        String[] labels = {"Name", "Location", "Start time", "End time", "Notes", ""};
+        String[] labels = {"Beschreibung", "Ort", "von", "bis", ""};
         int numPairs = labels.length;
 
         JButton saveButton = new JButton("Save");
@@ -98,11 +92,10 @@ public class TerminPanel extends JPanel {
      */
     private ArrayList<JTextField> listTextFields() {
         ArrayList<JTextField> textFieldList  = new ArrayList<>();
-        textFieldList.add(nameTextField = new JTextField());
-        textFieldList.add(locationTextField = new JTextField());
-        textFieldList.add(startTimeTextField = new JTextField());
-        textFieldList.add(endTimeTextField = new JTextField());
-        textFieldList.add(notesTextField = new JTextField());
+        textFieldList.add(beschreibungTextField = new JTextField());
+        textFieldList.add(ortTextField = new JTextField());
+        textFieldList.add(vonTextField = new JTextField());
+        textFieldList.add(bisTextField = new JTextField());
 
         return textFieldList;
     }
@@ -127,10 +120,10 @@ public class TerminPanel extends JPanel {
 
     /**
      * Shows an message dialog when an event is succesfully added.
-     * @param name the name of the event.
+     * @param beschreibung the name of the event.
      */
-    private void showSuccesMessage(String name) {
-        JOptionPane.showMessageDialog(null, "Your event \""+name+"\" is succesfully added.", "Event added", JOptionPane.PLAIN_MESSAGE);
+    private void showSuccesMessage(String beschreibung) {
+        JOptionPane.showMessageDialog(null, "Your event \""+beschreibung+"\" is succesfully added.", "Event added", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**
@@ -139,17 +132,17 @@ public class TerminPanel extends JPanel {
      * @param timeType 0 or 1; startTime or endTime
      * @return true or false; validated and setted or not
      */
-    private Boolean setFormattedTime(String time, Integer timeType) {
+     private Boolean setFormattedTime(Timestamp time, Integer timeType) {
         Boolean validated = true;
-        Time formattedTime = new Time(new Date().getTime());
+        Timestamp formattedTime = new Timestamp(new Date().getTime());
 
         // format time
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 
         try {
-            new SimpleDateFormat("HH:mm").parse(time);
+            new SimpleDateFormat("HH:mm").parse(String.valueOf(time));
             // good format
-            formattedTime = new Time(formatter.parse(time).getTime());
+            formattedTime = new Timestamp(formatter.parse(String.valueOf(time)).getTime());
         } catch (ParseException e) {
             // bad format
             validated = false;
@@ -178,24 +171,20 @@ public class TerminPanel extends JPanel {
          * @param e
          */
         public void actionPerformed(ActionEvent e) {
-            TerminHandle terminHandle = null;
-            Termin termin = terminHandle.create(new Termin());
             Boolean validName = true;
             Boolean validTimes = true;
 
             // get values
-            String name = nameTextField.getText();
-            String beschreibung = notesTextField.getText();
-            String ort = locationTextField.getText();
-            String von = startTimeTextField.getText(); // remove whitespace
-            String bis = endTimeTextField.getText();
+            String beschreibung = beschreibungTextField.getText();
+            String ort = ortTextField.getText();
+            Timestamp von = Timestamp.valueOf(vonTextField.getText()); // remove whitespace
+            Timestamp bis = Timestamp.valueOf(bisTextField.getText());
 
             // fields to null of not filled in
-            if (beschreibung.isEmpty()) { beschreibung = null; }
             if (ort.isEmpty()) { ort = null; }
 
             // validate name
-            if (name == null || name.isEmpty()) {
+            if (beschreibung == null || beschreibung.isEmpty()) {
                 validName = false;
             }
             // validate times
@@ -204,7 +193,7 @@ public class TerminPanel extends JPanel {
             }
             if (validTimes) {
                 // is end time greater then start time
-                if (Integer.parseInt(von.replaceAll("[^\\d]","")) > Integer.parseInt(bis.replaceAll("[^\\d]",""))) {
+                if (von.after(bis)) {
                     validTimes = false;
                 }
             }
@@ -212,13 +201,15 @@ public class TerminPanel extends JPanel {
 
             if (validName && validTimes) {
                 // add appointment
-                manager.addAppointment(termin);
+                Termin termin = new Termin(beschreibung, ort, von, bis);
+                TermineService terminService = new TermineService();
+                Termin insertedTermin = terminService.create(termin);
                 // close frame
                 appointmentFrame.setVisible(false);
                 appointmentFrame.dispose();
                 // repaint panels and show succes message
                 calendarPanel.monthPanel.redrawMonthPanel();
-                showSuccesMessage(name);
+                showSuccesMessage(beschreibung);
             }
             else {
                 // show errors

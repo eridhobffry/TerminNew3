@@ -1,7 +1,7 @@
 package gui;
 
-import DAO.NutzerDAO;
 import Data.Nutzer;
+import client.NutzerHandle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,8 +20,6 @@ public class Registration {
 
         static Color accent = new Color(0, 188, 212);
         static Color bg = new Color(96, 125, 139);
-
-        static NutzerDAO nutzerDAO = new NutzerDAO();
 
         /**
          * Launch the application.
@@ -121,7 +119,8 @@ public class Registration {
 
                         if (validName) {
                             Nutzer nutzer = new Nutzer(nachName, vorName);
-                            Nutzer insertedNutzer = nutzerDAO.create(nutzer);
+                            NutzerHandle nutzerHandler = new NutzerHandle();
+                            Nutzer insertedNutzer = nutzerHandler.create(nutzer);
 
                             JOptionPane.showMessageDialog(null, "Data Submitted");
                             MainFrame window = new MainFrame();

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class TerminDAO {
 
-    //TerminBox terminBox = new TerminBox();
     Termin termin;
 
     public TerminDAO(){
@@ -132,9 +131,9 @@ public class TerminDAO {
         return termin;
     }
 
-    /*public Termin save(Termin termin) {
+    public Termin save(Termin termin) {
         return termin.getId() > 0 ? update(termin) : create(termin);
-    }*/
+    }
 
 
     public Termin update(Termin termin) {

@@ -3,13 +3,10 @@ package Data;
 import DAO.EinladungDAO;
 import DAO.TeilnehmerDAO;
 import database.TimestampAdapter;
-import gui.TerminPanel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,20 +14,16 @@ import java.util.Objects;
 public class Termin {
 
         public int id;
-        public String title;
-        public Timestamp von;
-        public Timestamp bis;
         public String beschreibung;
         public String ort;
+        public Timestamp von;
+        public Timestamp bis;
 
-        private Date date;
-
-        private TerminPanel terminPanel;
 
 
     public Termin() {}
 
-    public Termin(int id, Timestamp von, Timestamp bis, String ort, String beschreibung) {
+    public Termin(int id, String beschreibung, String ort, Timestamp von, Timestamp bis) {
 
         this.id = id;
         this.von = von;
@@ -39,7 +32,7 @@ public class Termin {
         this.beschreibung = beschreibung;
     }
 
-    public Termin(Timestamp von, Timestamp bis, String ort, String beschreibung) {
+    public Termin(String beschreibung, String ort, Timestamp von, Timestamp bis) {
 
         this.von = von;
         this.bis = bis;
@@ -90,16 +83,6 @@ public class Termin {
         this.id = id;
     }
 
-    public String getTitle() {
-        /*String str = terminBox.getWhere();
-        return str;*/
-        return title;
-    }
-
-    public void setTitle(String ort) {
-        this.title = title;
-    }
-
     @XmlJavaTypeAdapter(TimestampAdapter.class)
     public Timestamp getVon() {
         return von;
@@ -119,8 +102,6 @@ public class Termin {
     }
 
     public String getOrt() {
-        /*String str = terminBox.getWhere();
-        return str;*/
         return ort;
     }
 
@@ -129,8 +110,6 @@ public class Termin {
     }
 
     public String getBeschreibung() {
-       /*String str = terminBox.getBeschreibung();
-       return str;*/
        return beschreibung;
     }
 
@@ -153,6 +132,6 @@ public class Termin {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, von, bis, beschreibung, ort);
+        return Objects.hash(id, beschreibung, ort, von, bis);
     }
 }
