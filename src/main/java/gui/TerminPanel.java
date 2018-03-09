@@ -27,15 +27,11 @@ public class TerminPanel extends JPanel {
     private CalendarPanel calendarPanel;
     private JTextField beschreibungTextField, ortTextField, vonTextField, bisTextField;
     private Timestamp formattedStartTime, formattedEndTime;
-    private CalendarManager manager = new CalendarManager();
-
 
     public Timestamp von;
     public Timestamp bis;
     public String beschreibung;
     public String ort;
-
-    private Date date1;
 
     /**
      * Constructor. Sets the global variables and calls the draw method.
@@ -132,7 +128,7 @@ public class TerminPanel extends JPanel {
      * @param timeType 0 or 1; startTime or endTime
      * @return true or false; validated and setted or not
      */
-     private Boolean setFormattedTime(Timestamp time, Integer timeType) {
+     /*private Boolean setFormattedTime(Timestamp time, Integer timeType) {
         Boolean validated = true;
         Timestamp formattedTime = new Timestamp(new Date().getTime());
 
@@ -160,7 +156,7 @@ public class TerminPanel extends JPanel {
         }
 
         return validated;
-    }
+    }*/
 
     /**
      * Inner class. Triggers an actionlistener when the <code>addAppointmentButton</code> is clicked.
@@ -188,9 +184,9 @@ public class TerminPanel extends JPanel {
                 validName = false;
             }
             // validate times
-            if (!setFormattedTime(von, 0) || !setFormattedTime(bis, 1)) {
+            /*if (!setFormattedTime(von, 0) || !setFormattedTime(bis, 1)) {
                 validTimes = false;
-            }
+            }*/
             if (validTimes) {
                 // is end time greater then start time
                 if (von.after(bis)) {
